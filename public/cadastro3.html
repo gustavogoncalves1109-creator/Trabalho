@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Cabeçalho e menu -->
+    <header>
+        <nav class="menu">
+            <a href="index.html" class="link-menu">Home</a>
+            <a href="galeria.html" class="link-menu">Galeria</a>
+            <a href="chat.html" class="link-menu">Chat</a>
+            <a href="cadastro3.html" class="link-menu">Cadastro</a>
+            <a href="login2.html" class="link-menu">Login</a>
+        </nav>
+    </header>
+
+    <!-- Conteúdo principal -->
+    <main>
+
+        <!-- Seção de cadastro -->
+        <section class="secao-cadastro">
+
+            <!-- Artigo contendo o formulário -->
+            <article class="card-cadastro">
+
+                <h1>Cadastro</h1>
+
+                <p class="texto-cadastro">
+                    Preencha os campos abaixo para realizar seu cadastro.
+                </p>
+
+                <!-- Formulário -->
+                <form id="formulario-cadastro">
+
+                    
+    <label for="usuario">Nome do usuário</label><br>
+    <input type="text" id="usuario" placeholder="Digite seu nome"
+    required>
+    
+
+    <label for="email">E-mail</label><br>
+    <input type="email" id="email" placeholder="Digite seu e-mail"
+    required>
+
+    <label for="senha">Senha</label><br>
+    <input type="password" id="senha" placeholder="Digite sua senha"
+    required>
+
+    <button id="btncadastro" class="btn-cadastro">Enviar</button>
+    <div id="cadmensagem" class="cardMensagem"></div>
+
+                </form>
+
+                <!-- Resposta do servidor -->
+                <div id="resposta"></div>
+
+            </article>
+
+        </section>
+
+    </main>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>
+            &copy; 2026 Gustavo Gonçalves Vieira. Todos os direitos reservados.
+        </p>
+    </footer>
+
+    <script>
+        const btnCadastrar = document.querySelector('#btncadastro');
+        const cadMensagem = document.querySelector('#cadmensagem');
+
+        btnCadastro.addEventListener('click', async() => {
+            const usuarioEntrada = document.querySelector('#usuario');
+            const emailEntrada = document.querySelector('#email');
+            const senhaEntrada = document.querySelector('#senha');
+
+            const usuario = usuarioEntrada.value;
+            const email = emailEntrada.value;
+            const senha = senhaEntrada.value;
+
+           
+            if (!usuario || !email || !senha) {
+                cadMensagem.innerText = 'Preencha todos os campos antes de enviar!';
+                cadMensagem.style.color = 'red';
+                return;
+            }
+
+            cadMensagem.innerText = 'Aguarde 5 segundos, cadastrando no servidor...';
+            cadMensagem.style.color = 'orange';
+         
+            try {
+                const respostaBe = await fetch('http://localhost:3000/cadastro', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        usuario: usuario,
+                        email: email,
+                        senha: senha
+                    })
+                });
+
+                const dados = await respostaBe.json();
+               
+                if (!respostaBe.ok) {
+                    cadMensagem.innerText = `${dados.erro}`;
+                    cadMensagem.style.color = 'red';
+                    return;
+                }
+
+                cadMensagem.innerText = `${dados.mensagem}: ${dados.PERFIL}`;
+                cadMensagem.style.color = 'green';
+
+                usuarioEntrada.value = '';
+                emailEntrada.value = '';
+                senhaEntrada.value = '';
+
+            } catch (erro) {
+                console.error('Erro na requisição:', erro);
+                cadMensagem.innerText = 'Erro ao conectar com o servidor!!';
+                cadMensagem.style.color = 'red';
+            }
+        }
+    
+    );
+
+       
+    </script>
+
+
+
+</body>
+</html>
+

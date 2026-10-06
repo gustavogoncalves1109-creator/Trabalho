@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Cabeçalho e menu -->
+    <header>
+        <nav class="menu">
+            <a href="index.html" class="link-menu">Home</a>
+            <a href="galeria.html" class="link-menu">Galeria</a>
+            <a href="chat.html" class="link-menu">Chat</a>
+            <a href="cadastro3.html" class="link-menu">Cadastro</a>
+            <a href="login2.html" class="link-menu">Login</a>
+        </nav>
+    </header>
+
+    <!-- Conteúdo principal -->
+    <main>
+
+        <!-- Seção de login -->
+        <section class="secao-login">
+
+            <!-- Artigo contendo o formulário -->
+            <article class="card-login">
+
+                <h1>Login</h1>
+
+                <p class="texto-login">
+                    Preencha os campos abaixo para realizar seu login.
+                </p>
+
+                <!-- Formulário -->
+                <form id="formulario-login">
+
+    
+
+    <label for="email">E-mail</label><br>
+    <input type="email" id="email" placeholder="Digite seu e-mail"
+    required>
+
+    <label for="senha">Senha</label><br>
+    <input type="password" id="senha" placeholder="Digite sua senha"
+    required>
+
+    <button id="btnlogin" class="btn-login">Enviar</button>
+    <div id="loginMensagem" class="cadMensagem"></div>
+
+                </form>
+
+                <!-- Resposta do servidor -->
+                <div id="resposta"></div>
+
+            </article>
+
+        </section>
+
+    </main>
+
+    <!-- Rodapé -->
+    <footer>
+        <p>
+            &copy; 2026 Gustavo Gonçalves Vieira. Todos os direitos reservados.
+        </p>
+    </footer>
+
+    <script>
+          const btnLogin = document.querySelector('#btnlogin');
+        const loginMensagem = document.querySelector('#loginMensagem');
+
+        btnLogin.addEventListener('click', async() => {
+           
+            const emailEntrada = document.querySelector('#loginEmail');
+            const senhaEntrada = document.querySelector('#loginSenha');
+          
+           
+            const email = emailEntrada.value;
+            const senha = senhaEntrada.value;
+
+           
+            if (!email || !senha) {
+                loginMensagem.innerText = 'Preencha todos os campos antes de enviar!';
+                loginMensagem.style.color = 'red';
+                return;
+            }
+
+            loginMensagem.innerText = 'Aguarde 4 segundos, realizando login no servidor...';
+            loginMensagem.style.color = 'green';
+         
+            try {
+                const respostaBe = await fetch('http://localhost:3000/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email,
+                        senha: senha
+                    })
+                });
+
+                const dados = await respostaBe.json();
+               
+                if (!respostaBe.ok) {
+                    loginMensagem.innerText = `${dados.erro}`;
+                    loginMensagem.style.color = 'red';
+                    return;
+                }
+
+                loginMensagem.innerText = `${dados.mensagem}: ${dados.usuario} entrando no site...`;
+                loginMensagem.style.color = 'green';
+
+                emailEntrada.value = '';
+                senhaEntrada.value = '';
+
+            } catch (erro) {
+                console.error('Erro na requisição:', erro);
+                loginMensagem.innerText = 'Erro ao conectar com o servidor!!';
+                loginMensagem.style.color = 'red';
+            }
+        }
+    
+    );
+
+       
+    </script>
+
+
+
+</body>
+</html>
+
