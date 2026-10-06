@@ -3,7 +3,7 @@ import cors from 'cors';
 import 'dotenv/config'
 const app = express()
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+
 
 
 const PORT = process.env.PORT || 5000
